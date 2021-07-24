@@ -17,5 +17,11 @@ public class YamlTemplates {
     public final static String complexElementFromComplex = 
     "      {{NAME}}: \n" +
     "        $ref: \"#/definitions/{{TYPE}}\" ";
+
+    public final static String complexUnboundedElementFromComplex = 
+    "      {{NAME}}: \n" +
+    "        type: array \n" +
+    "        items: \n" +
+    "          $ref: \"#/definitions/{{TYPE}}\" ";
     
 }

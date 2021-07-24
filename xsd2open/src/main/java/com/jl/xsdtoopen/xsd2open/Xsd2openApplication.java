@@ -25,7 +25,7 @@ public class Xsd2openApplication implements CommandLineRunner{
 	@Override
 	public void run(String... args) throws Exception {
 		Serializer serializer = new Persister();
-		File source = new ClassPathResource("data/sample.xsd").getFile();
+		File source = new ClassPathResource("data/easy.xsd").getFile();
 		XsdSchema schema = serializer.read(XsdSchema.class, source);
 		schema.getElement().stream().forEach(
 			x -> print(x.getName(), x.getType(),YamlTemplates.complexElementFromSchema)
@@ -34,13 +34,23 @@ public class Xsd2openApplication implements CommandLineRunner{
 			print(type.getName(), null, YamlTemplates.complexElementBegin);
 			for(XsdElement el : type.getSequence().getElement()){
 				if(el.getType().contains("tns:")){
-					print(el.getName(), el.getType(), YamlTemplates.complexElementFromComplex);
+					if(el.getMaxOccurs()==null){
+						print(el.getName(), el.getType(), YamlTemplates.complexElementFromComplex);
+					} else if(el.getMaxOccurs().equals("unbounded")){
+						print(el.getName(), el.getType(), YamlTemplates.complexUnboundedElementFromComplex);
+					} else {
+						print(el.getName(), el.getType(), YamlTemplates.complexElementFromComplex);
+					}
 				}else{
 					setDatatypeAndPrint(el.getName(), el.getType());
 				}
 			}
-			for(XsdAttribute attr : type.getAttribute()){
-				setDatatypeAndPrint(attr.getName(), attr.getType());
+			try{
+				for(XsdAttribute attr : type.getAttribute()){
+					setDatatypeAndPrint(attr.getName(), attr.getType());
+				}
+			}catch(NullPointerException npe){
+				// NO ITENS AS ATTRIBUTES
 			}
 		}
 	}

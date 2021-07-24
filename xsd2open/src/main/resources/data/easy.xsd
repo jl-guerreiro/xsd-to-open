@@ -2,11 +2,19 @@
            xmlns:tns="http://tempuri.org/PurchaseOrderSchema.xsd"
            targetNamespace="http://tempuri.org/PurchaseOrderSchema.xsd"
            elementFormDefault="qualified">
-<xsd:complexType name="tipoOrdem">
+<xsd:complexType name="TipoOrdem">
 <xsd:sequence>
-  <xsd:element name="enviaPara" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-   <xsd:element name="cobraPara" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+  <xsd:element name="enviarPara" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+   <xsd:element name="cobrarPara" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+   <xsd:element name="endereco" type="tns:Endereco" minOccurs="0" maxOccurs="unbounded"/>
   </xsd:sequence>
  </xsd:complexType>
- <element name="a" type="b" minOccurs="0" maxOccurs="1"/>
+ <xsd:complexType name="Endereco">
+<xsd:sequence>
+  <xsd:element name="rua" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+   <xsd:element name="numero" type="xsd:integer" minOccurs="0" maxOccurs="1"/>
+   <xsd:element name="cidade" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+  </xsd:sequence>
+ </xsd:complexType>
+ <element name="tipoOrdem" type="tns:TipoOrdem" minOccurs="0" maxOccurs="1"/>
 </xsd:schema>
