@@ -2,9 +2,11 @@ package com.jl.xsdtoopen.xsd2open;
 
 import java.io.File;
 
+import com.jl.xsdtoopen.xsd2open.model.XsdAttribute;
 import com.jl.xsdtoopen.xsd2open.model.XsdComplexType;
 import com.jl.xsdtoopen.xsd2open.model.XsdElement;
 import com.jl.xsdtoopen.xsd2open.model.XsdSchema;
+import com.jl.xsdtoopen.xsd2open.templates.YamlTemplates;
 
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
@@ -26,14 +28,41 @@ public class Xsd2openApplication implements CommandLineRunner{
 		File source = new ClassPathResource("data/sample.xsd").getFile();
 		XsdSchema schema = serializer.read(XsdSchema.class, source);
 		schema.getElement().stream().forEach(
-			x -> System.out.println("el:" + x.getName() + " " + x.getType())
+			x -> print(x.getName(), x.getType(),YamlTemplates.complexElementFromSchema)
 		);
 		for(XsdComplexType type : schema.getComplexType()){
-			System.out.println(" type: " + type.getName());
+			print(type.getName(), null, YamlTemplates.complexElementBegin);
 			for(XsdElement el : type.getSequence().getElement()){
-				System.out.println("  el: " + el.getName() + " " + el.getType());
+				if(el.getType().contains("tns:")){
+					print(el.getName(), el.getType(), YamlTemplates.complexElementFromComplex);
+				}else{
+					setDatatypeAndPrint(el.getName(), el.getType());
+				}
+			}
+			for(XsdAttribute attr : type.getAttribute()){
+				setDatatypeAndPrint(attr.getName(), attr.getType());
 			}
 		}
+	}
+
+	private void setDatatypeAndPrint(String name, String type){
+		String datatype = "string";
+		if(type.toLowerCase().contains("int")) datatype = "number";
+		if(type.toLowerCase().contains("bool")) datatype = "boolean";
+		if(type.toLowerCase().contains("double")) datatype = "number";
+		print(name, datatype, YamlTemplates.primitiveElementFromComplex);
+	}
+
+	private void print(String name, String type, String template){
+		String s = template;
+		if(name!=null){
+			s = s.replace("{{NAME}}", name);
+		}
+		if(type!=null){
+			if(type.contains("tns:")) type = type.replace("tns:","");
+			s = s.replace("{{TYPE}}", type);
+		}
+		System.out.println(s);
 	}
 
 	

@@ -39,4 +39,14 @@ public class XsdComplexType {
         this.name = name;
     }
 
+    public List<XsdAttribute> getAttribute() {
+        return attribute;
+    }
+
+    public void setAttribute(List<XsdAttribute> attribute) {
+        this.attribute = attribute;
+    }
+
+    
+
 }
