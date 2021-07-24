@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-Xsd2openApplication<xsd2open>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "com.jl.xsdtoopen.xsd2open.Xsd2openApplication",
+            "projectName": "xsd2open",
+            "args": ""
+        }
+    ]
+}
