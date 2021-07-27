@@ -1,6 +1,7 @@
 package com.jl.xsdtoopen.xsd2open.model;
 
 import org.simpleframework.xml.Attribute;
+import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
 @Root(name = "element")
@@ -9,7 +10,7 @@ public class XsdElement {
     @Attribute(name = "name")
     private String name;
 
-    @Attribute(name = "type")
+    @Attribute(name = "type", required = false)
     private String type;
 
     @Attribute(name = "minOccurs", required = false)
@@ -17,6 +18,9 @@ public class XsdElement {
 
     @Attribute(name = "maxOccurs", required = false)
     private String maxOccurs;
+
+    @Element(name = "complexType", required = false)
+    private XsdComplexType complexType;
 
     public XsdElement(){
 
@@ -52,6 +56,14 @@ public class XsdElement {
 
     public void setMaxOccurs(String maxOccurs) {
         this.maxOccurs = maxOccurs;
+    }
+
+    public XsdComplexType getComplexType(){
+        return this.complexType;
+    }
+
+    public void setComplexType(XsdComplexType complexType){
+        this.complexType = complexType;
     }
 
 }

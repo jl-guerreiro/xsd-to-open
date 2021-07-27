@@ -14,6 +14,14 @@
   <xsd:element name="rua" type="xsd:string" minOccurs="0" maxOccurs="1"/>
    <xsd:element name="numero" type="xsd:integer" minOccurs="0" maxOccurs="1"/>
    <xsd:element name="cidade" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+   <xsd:element name="telefone" minOccurs="0" maxOccurs="0">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="fixo" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+        <xsd:element name="celular" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      </xsd:sequence>
+    </xsd:complexType>
+   </xsd:element>
   </xsd:sequence>
  </xsd:complexType>
  <element name="tipoOrdem" type="tns:TipoOrdem" minOccurs="0" maxOccurs="1"/>

@@ -23,5 +23,14 @@ public class YamlTemplates {
     "        type: array \n" +
     "        items: \n" +
     "          $ref: \"#/definitions/{{TYPE}}\" ";
+
+    public final static String complexTypeInsideElementBegin =
+    "      {{NAME}}: \n" +
+    "        type: object \n" +
+    "        properties: ";
+
+    public final static String primitiveElementFromComplexOneLevelAhead = 
+    "          {{NAME}}: \n" +
+    "            type: {{TYPE}} ";
     
 }

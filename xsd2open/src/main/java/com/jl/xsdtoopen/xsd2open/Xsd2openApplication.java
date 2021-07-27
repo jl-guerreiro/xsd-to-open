@@ -27,12 +27,29 @@ public class Xsd2openApplication implements CommandLineRunner{
 		Serializer serializer = new Persister();
 		File source = new ClassPathResource("data/easy.xsd").getFile();
 		XsdSchema schema = serializer.read(XsdSchema.class, source);
+
 		schema.getElement().stream().forEach(
 			x -> print(x.getName(), x.getType(),YamlTemplates.complexElementFromSchema)
 		);
+
 		for(XsdComplexType type : schema.getComplexType()){
 			print(type.getName(), null, YamlTemplates.complexElementBegin);
+
 			for(XsdElement el : type.getSequence().getElement()){
+
+				if(el.getType()==(null)){
+					try{
+						if(el.getComplexType().getSequence().getElement().size()<1)continue;
+							print(el.getName(),null,YamlTemplates.complexTypeInsideElementBegin);
+						for(XsdElement elChild : el.getComplexType().getSequence().getElement()){
+							setDatatypeAndPrint(elChild.getName(),elChild.getType(),YamlTemplates.primitiveElementFromComplexOneLevelAhead);
+						}
+					}catch(NullPointerException npe){
+						// NO COMPLEX TYPE OR TOO MUCH COMPLEXITY
+					}
+					continue;
+				}
+
 				if(el.getType().contains("tns:")){
 					if(el.getMaxOccurs()==null){
 						print(el.getName(), el.getType(), YamlTemplates.complexElementFromComplex);
@@ -45,6 +62,7 @@ public class Xsd2openApplication implements CommandLineRunner{
 					setDatatypeAndPrint(el.getName(), el.getType());
 				}
 			}
+			
 			try{
 				for(XsdAttribute attr : type.getAttribute()){
 					setDatatypeAndPrint(attr.getName(), attr.getType());
@@ -56,11 +74,15 @@ public class Xsd2openApplication implements CommandLineRunner{
 	}
 
 	private void setDatatypeAndPrint(String name, String type){
+		setDatatypeAndPrint(name,type,YamlTemplates.primitiveElementFromComplex);
+	}
+
+	private void setDatatypeAndPrint(String name, String type, String template){
 		String datatype = "string";
 		if(type.toLowerCase().contains("int")) datatype = "number";
 		if(type.toLowerCase().contains("bool")) datatype = "boolean";
 		if(type.toLowerCase().contains("double")) datatype = "number";
-		print(name, datatype, YamlTemplates.primitiveElementFromComplex);
+		print(name, datatype, template);
 	}
 
 	private void print(String name, String type, String template){
